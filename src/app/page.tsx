@@ -1,12 +1,18 @@
+'use client'
+import { useState } from 'react'
 import Header from '@/components/Header'
 import BiometricTool from '@/components/BiometricTool'
+import FamilyCardTool from '@/components/FamilyCardTool'
 
-const COMING_SOON = [
-  { icon: '👨‍👩‍👧', title: 'بطاقة العائلة', desc: 'Illustrator → SVG → PDF جاهز للطباعة' },
-  { icon: '🏥',      title: 'بطاقة CNSS',   desc: 'Photoshop PSD → معالجة تلقائية → طباعة PVC' },
+const TABS = [
+  { id: 'biometric', icon: '📸', label: 'الصور البيومترية', available: true },
+  { id: 'family',    icon: '👨‍👩‍👧', label: 'بطاقة العائلة',    available: true },
+  { id: 'cnss',      icon: '🏥', label: 'بطاقة CNSS',        available: false },
 ]
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState('biometric')
+
   return (
     <>
       <Header />
@@ -14,7 +20,7 @@ export default function Home() {
       <main style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
 
-          {/* ── Hero ────────────────────────────────────────────────────── */}
+          {/* ── Hero ─────────────────────────────────────────────────── */}
           <section style={{ padding: '60px 0 44px', textAlign: 'center' }}>
             <div className="animate-fade-down" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.3)', color: '#60a5fa', padding: '6px 16px', borderRadius: 999, fontSize: 13, marginBottom: 24 }}>
               ✨ مدعوم بـ Fal.ai BiRefNet Portrait AI
@@ -32,34 +38,42 @@ export default function Home() {
             </p>
           </section>
 
-          {/* ── Tabs ────────────────────────────────────────────────────── */}
+          {/* ── Tabs ─────────────────────────────────────────────────── */}
           <div style={{ display: 'flex', gap: 8, marginBottom: 32, background: '#111318', border: '1px solid #252a35', padding: 6, borderRadius: 20, width: 'fit-content', margin: '0 auto 32px' }}>
-            {/* Active tab */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', borderRadius: 14, background: '#3b82f6', color: 'white', fontSize: 14, fontWeight: 600, boxShadow: '0 4px 16px rgba(59,130,246,0.4)' }}>
-              📸 الصور البيومترية
-              <span style={{ background: 'rgba(255,255,255,0.2)', padding: '1px 7px', borderRadius: 999, fontSize: 10 }}>متاح</span>
+            {TABS.map(tab => (
+              <div key={tab.id}
+                onClick={() => tab.available && setActiveTab(tab.id)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 8,
+                  padding: '10px 20px', borderRadius: 14, fontSize: 14, fontWeight: 600,
+                  cursor: tab.available ? 'pointer' : 'default',
+                  transition: 'all 0.2s',
+                  background: activeTab === tab.id ? '#3b82f6' : 'transparent',
+                  color: activeTab === tab.id ? 'white' : tab.available ? '#9ca3af' : '#4b5563',
+                  boxShadow: activeTab === tab.id ? '0 4px 16px rgba(59,130,246,0.4)' : 'none',
+                }}>
+                {tab.icon} {tab.label}
+                <span style={{
+                  background: activeTab === tab.id ? 'rgba(255,255,255,0.2)' : '#181c24',
+                  border: activeTab === tab.id ? 'none' : '1px solid #252a35',
+                  padding: '1px 7px', borderRadius: 999, fontSize: 10
+                }}>
+                  {tab.available ? 'متاح' : 'قريباً'}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* ── المحتوى حسب التبويب ──────────────────────────────────── */}
+          {activeTab === 'biometric' && <BiometricTool />}
+          {activeTab === 'family'    && <FamilyCardTool />}
+          {activeTab === 'cnss' && (
+            <div style={{ background: '#111318', border: '1px solid #252a35', borderRadius: 20, padding: '80px 32px', textAlign: 'center', marginBottom: 64 }}>
+              <div style={{ fontSize: 64, marginBottom: 16, opacity: 0.3 }}>🏥</div>
+              <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>بطاقة CNSS — قريباً</div>
+              <div style={{ fontSize: 13, color: '#6b7280' }}>Photoshop PSD → معالجة تلقائية → طباعة PVC</div>
             </div>
-            {COMING_SOON.map(cs => (
-              <div key={cs.title} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', borderRadius: 14, color: '#6b7280', fontSize: 14, fontWeight: 600, cursor: 'default' }}>
-                {cs.icon} {cs.title}
-                <span style={{ background: '#181c24', border: '1px solid #252a35', padding: '1px 7px', borderRadius: 999, fontSize: 10 }}>قريباً</span>
-              </div>
-            ))}
-          </div>
-
-          {/* ── Biometric Tool ──────────────────────────────────────────── */}
-          <BiometricTool />
-
-          {/* ── Coming Soon Cards ───────────────────────────────────────── */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 64 }}>
-            {COMING_SOON.map(cs => (
-              <div key={cs.title} style={{ background: '#111318', border: '1px solid #252a35', borderRadius: 20, padding: '48px 32px', textAlign: 'center' }}>
-                <div style={{ fontSize: 52, marginBottom: 16, opacity: 0.4 }}>{cs.icon}</div>
-                <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>{cs.title} — قريباً</div>
-                <div style={{ fontSize: 13, color: '#6b7280' }}>{cs.desc}</div>
-              </div>
-            ))}
-          </div>
+          )}
 
         </div>
       </main>
