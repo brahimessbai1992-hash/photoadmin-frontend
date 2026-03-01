@@ -1,5 +1,5 @@
-import CnssCardTool from '@/components/CnssCardTool'
 'use client'
+import CnssCardTool from '@/components/CnssCardTool'
 import { useState } from 'react'
 import Header from '@/components/Header'
 import BiometricTool from '@/components/BiometricTool'
