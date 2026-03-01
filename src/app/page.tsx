@@ -8,7 +8,7 @@ import FamilyCardTool from '@/components/FamilyCardTool'
 const TABS = [
   { id: 'biometric', icon: '📸', label: 'الصور البيومترية', available: true },
   { id: 'family',    icon: '👨‍👩‍👧', label: 'بطاقة العائلة',    available: true },
-  { id: 'cnss',      icon: '🏥', label: 'بطاقة CNSS',        available: false },
+  { id: 'cnss',      icon: '🏥', label: 'بطاقة CNSS',        available: true },
 ]
 
 export default function Home() {
